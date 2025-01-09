@@ -17,29 +17,50 @@ def configurar_pantalla2():
     st.title("Tu descripción detallada está lista")
     st.markdown(
         """
-        A continuación encontrarás el texto generado a partir de tus selecciones.  
+        Debajo encontrarás el texto generado a partir de tus selecciones.  
         Este texto está optimizado para herramientas de generación de imágenes con IA.  
-        Podés copiarlo o editarlo según tus necesidades.
+        Podés copiarlo, traducirlo o ajustarlo según tus necesidades.
         """
     )
 
     # Generar el prompt
     prompt = generar_prompt(params)
 
-    # Mostrar el prompt en un cuadro editable
-    st.text_area(
-        label="Texto generado - Editá y personalizá si es necesario:",
+    # Cuadro editable para personalizar el texto generado
+    texto_editable = st.text_area(
+        label="Descripción detallada - Editá y personalizá si es necesario:",
         value=prompt,
         height=300,
         key="texto_editable"
     )
 
-    # Botón nativo para copiar texto
-    st.download_button(
-        label="Descargar descripción como archivo .txt",
-        data=prompt,
-        file_name="descripcion_generada.txt",
-        mime="text/plain"
+    # Mostrar el prompt con el botón de copia nativo
+    st.subheader("Texto para copiar:")
+    st.code(texto_editable, language="")  # Botón nativo de copiar dentro del cuadro de código
+
+    # Opción para traducir al inglés
+    st.subheader("Traducción al inglés:")
+    st.markdown(
+        """
+        **¿Por qué traducir?**  
+        Muchas herramientas de IA están optimizadas para procesar descripciones en inglés.  
+        Usá el botón para traducir el texto en Google Translate.
+        """
+    )
+    if st.button("Abrir en Google Translate"):
+        google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={texto_editable.replace(' ', '%20')}"
+        st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
+
+    # Herramientas recomendadas
+    st.subheader("Herramientas recomendadas:")
+    st.markdown(
+        """
+        - [**DALL-E**](https://openai.com/dall-e): Ideal para realismo y precisión.  
+        - [**Midjourney**](https://www.midjourney.com/): Excelente para resultados artísticos.  
+        - [**Stable Diffusion**](https://stability.ai/): Perfecto para personalización detallada.  
+        - [**Canva**](https://www.canva.com/): Integra IA con diseño gráfico.  
+        - [**Adobe Firefly**](https://www.adobe.com/sensei/generative-ai/adobe-firefly.html): Herramienta profesional con IA.  
+        """
     )
 
     # Botón para modificar parámetros
@@ -50,8 +71,8 @@ def configurar_pantalla2():
     st.markdown(
         """
         ### Llevá tu visión a la realidad  
-        Copiá tu descripción personalizada o hacé clic en "Modificar Parámetros" para realizar ajustes adicionales.  
-        ¡Usá este texto en herramientas de IA para crear imágenes increíbles!
+        Copiá tu descripción personalizada, traducila al inglés o hacé clic en "Modificar Parámetros"  
+        para realizar ajustes adicionales. ¡Usá este texto en herramientas de IA para crear imágenes únicas!
         """
     )
 
