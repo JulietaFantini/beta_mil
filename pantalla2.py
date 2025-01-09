@@ -1,159 +1,122 @@
 import streamlit as st
 
-# Constantes para verbos y frases de "Otro"
+# Constantes para conectores y frases base
 VERBOS_BASE = {
     'representar': 'que represente',
     'proposito': 'diseñada para',
-    'estilo': 'inspirada en un estilo',
-    'iluminacion': 'iluminada con',
-    'plano': 'capturada desde',
+    'estilo': 'con',
+    'iluminacion': 'bañada en luz',
+    'plano': 'mostrando detalles capturados desde un plano',
     'composicion': 'siguiendo una composición basada en',
 }
 
 FRASES_OTRO = {
-    'tipo_imagen': 'un tipo de imagen inspirado en',
-    'idea_inicial': 'una idea inicial basada en',
-    'proposito': 'un propósito que evoque',
-    'estilo': 'un estilo artístico que recuerde a',
+    'tipo_imagen': 'inspirada en',
+    'idea_inicial': 'basada en',
+    'proposito': 'orientada hacia',
+    'estilo': 'con',
 }
 
+# Validación de datos
+def validar_datos(params):
+    """
+    Valida los datos proporcionados para asegurar coherencia y evitar errores.
+    """
+    errores = []
+    if not params.get("idea_inicial"):
+        errores.append("La 'Idea Inicial' no puede estar vacía.")
+    if params.get("tipo_de_imagen") == "Otro" and not params.get("tipo_de_imagen_personalizado"):
+        errores.append("Si seleccionaste 'Otro' en 'Tipo de Imagen', completa su descripción.")
+    if params.get("estilo_artístico") == "Otro" and not params.get("estilo_artístico_personalizado"):
+        errores.append("Si seleccionaste 'Otro' en 'Estilo Artístico', completa su descripción.")
+    return errores
+
+# Generación del prompt
 def generar_prompt(params):
     """
-    Genera un texto narrativo a partir de los parámetros ingresados.
+    Genera un texto narrativo fluido a partir de los parámetros predefinidos.
     """
-    prompt_parts = []
+    partes_prompt = ["Imagina"]
 
-    # 1. Inicio obligatorio con "Imagina"
-    prompt_parts.append("Imagina")
-
-    # 2. Idea inicial (primero)
+    # Idea inicial
     if params.get("idea_inicial"):
-        if params["idea_inicial"] == "Otro" and params.get("idea_inicial_personalizado"):
-            valor = params['idea_inicial_personalizado'].lower()
-            prompt_parts.append(f"que represente {valor} (idea inicial)")
-        else:
-            prompt_parts.append(f"que represente {params['idea_inicial'].lower()} (idea inicial)")
+        partes_prompt.append(params["idea_inicial"].lower())
 
-    # 3. Tipo de imagen (segundo)
-    if params.get("tipo_de_imagen"):
-        if params["tipo_de_imagen"] == "Otro" and params.get("tipo_de_imagen_personalizado"):
-            valor = params['tipo_de_imagen_personalizado'].lower()
-            prompt_parts.append(f"{valor}")
-        else:
-            prompt_parts.append(f"{params['tipo_de_imagen'].lower()} (tipo de imagen)")
+    # Tipo de Imagen
+    if params.get("tipo_de_imagen") == "Otro":
+        partes_prompt.append(f"{FRASES_OTRO['tipo_imagen']} {params.get('tipo_de_imagen_personalizado', '').lower()}")
+    else:
+        partes_prompt.append(f"representada en una {params['tipo_de_imagen'].lower()}")
 
-    # 4. Propósito y subpropósito
+    # Propósito
     if params.get("proposito_categoria"):
-        if params["proposito_categoria"] == "Otro" and params.get("proposito_personalizado"):
-            valor = params['proposito_personalizado'].lower()
-            prompt_parts.append(f"diseñada para un propósito que evoque {valor}")
-        else:
-            proposito_text = f"diseñada para {params['proposito_categoria'].lower()} (propósito)"
-            if params.get("subpropósito"):
-                proposito_text += f" con un enfoque en {params['subpropósito'].lower()} (subpropósito)"
-            prompt_parts.append(proposito_text)
+        texto_proposito = f"{VERBOS_BASE['proposito']} {params['proposito_categoria'].lower()}"
+        if params.get("subpropósito"):
+            texto_proposito += f", {FRASES_OTRO['proposito']} {params['subpropósito'].lower()}"
+        partes_prompt.append(texto_proposito)
 
-    # 5. Estilo artístico
-    if params.get("estilo_artístico"):
-        if params["estilo_artístico"] == "Otro" and params.get("estilo_artístico_personalizado"):
-            valor = params['estilo_artístico_personalizado'].lower()
-            prompt_parts.append(f"inspirada en {valor}")
-        else:
-            prompt_parts.append(f"inspirada en un estilo {params['estilo_artístico'].lower()} (estilo artístico)")
+    # Estilo Artístico
+    if params.get("estilo_artístico") == "Otro":
+        partes_prompt.append(f"{FRASES_OTRO['estilo']} {params.get('estilo_artístico_personalizado', '').lower()} como estilo")
+    else:
+        partes_prompt.append(f"{VERBOS_BASE['estilo']} {params['estilo_artístico'].lower()} como estilo")
 
-    # Opcionales (iluminación, plano, etc.)
+    # Opcionales
     opcionales = {
-        'iluminación': 'iluminada con',
-        'plano_fotográfico': 'capturada desde',
-        'composición': 'siguiendo una composición basada en',
+        'iluminación': VERBOS_BASE['iluminacion'],
+        'plano_fotográfico': VERBOS_BASE['plano'],
+        'composicion': VERBOS_BASE['composicion'],
         'paleta_de_colores': 'utilizando una paleta de colores',
-        'textura': 'destacando por sus texturas',
-        'resolucion': 'diseñada en una resolución de',
+        'textura': 'destacando texturas',
+        'resolucion': 'en una resolución de',
         'aspecto': 'con una relación de aspecto de',
     }
-
     for campo, verbo in opcionales.items():
-        if params.get(campo):
-            valor = params[campo].split(" ")[0].lower() if campo in ['resolucion', 'aspecto'] else params[campo].lower()
-            prompt_parts.append(f"{verbo} {valor} ({campo})")
+        if params.get(campo) and params[campo] != "Seleccioná una opción...":
+            partes_prompt.append(f"{verbo} {params[campo].lower()}")
 
-    # Combinar todo
-    prompt = ". ".join(filter(None, prompt_parts)) + "."
-    return prompt
+    return ", ".join(partes_prompt).capitalize() + "."
 
+# Configuración de Pantalla 2
 def configurar_pantalla2():
     """
-    Pantalla 2: Generación del Prompt a partir de los datos ingresados.
+    Configura Pantalla 2 para generar y mostrar el prompt.
     """
-    # Validar si los parámetros están disponibles
+    # Verifica que los parámetros existan
     if "params" not in st.session_state or not st.session_state.params:
         st.warning("No se han proporcionado datos de la Pantalla 1. Regresa y completa los campos obligatorios.")
         if st.button("Volver a Pantalla 1"):
             st.session_state.mostrar_pantalla2 = False
         return
 
-    # Encabezado y texto de introducción dentro de un contenedor para evitar desplazamientos
-    with st.container():
-        st.title("Tu descripción detallada está lista")
-        st.markdown(
-            """
-            A continuación encontrarás el texto generado a partir de tus selecciones.  
-            Este texto está optimizado para herramientas de generación de imágenes con IA.  
-            Podés copiarlo, traducirlo o ajustarlo según tus necesidades.
-            """
-        )
-
+    # Obtiene los parámetros
     params = st.session_state.params
 
-    # Generar el prompt
+    # Validaciones
+    errores = validar_datos(params)
+    if errores:
+        st.error("Errores detectados:")
+        for error in errores:
+            st.markdown(f"- {error}")
+        return
+
+    # Genera el prompt
     prompt = generar_prompt(params)
 
-    # Área editable para personalizar el texto generado
-    st.subheader("Descripción detallada - Editá y personalizá si es necesario")
-    texto_editable = st.text_area(
-        label="Podés editar tu descripción aquí:",
-        value=prompt,
-        height=300
-    )
+    # Muestra el prompt generado
+    st.subheader("Prompt Generado")
+    texto_editable = st.text_area("Edita tu prompt aquí:", value=prompt, height=200)
 
-    # Mostrar el prompt con el botón de copia nativo
-    st.subheader("Texto para copiar:")
-    st.code(texto_editable, language="")  # Botón nativo de copiar dentro del cuadro de código
-
-    # Opción para traducir al inglés
-    st.subheader("Traducción al inglés:")
-    st.markdown(
-        """
-        **¿Por qué traducir?**  
-        Muchas herramientas de IA están optimizadas para procesar descripciones en inglés.  
-        Usá el botón para traducir el texto en Google Translate.
-        """
-    )
+    # Opciones de interacción
+    st.subheader("Opciones")
+    st.code(texto_editable, language="")  # Botón de copia nativo
     if st.button("Abrir en Google Translate"):
         google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={texto_editable.replace(' ', '%20')}"
         st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
 
-    # Herramientas recomendadas
-    st.subheader("Herramientas recomendadas:")
-    st.markdown(
-        """
-        - [**DALL-E**](https://openai.com/dall-e): Ideal para realismo y precisión.  
-        - [**Midjourney**](https://www.midjourney.com/): Excelente para resultados artísticos.  
-        - [**Stable Diffusion**](https://stability.ai/): Perfecto para personalización detallada.  
-        - [**Canva**](https://www.canva.com/): Integra IA con diseño gráfico.  
-        - [**Adobe Firefly**](https://www.adobe.com/sensei/generative-ai/adobe-firefly.html): Herramienta profesional con IA.  
-        """
-    )
-
-    # Botón para modificar parámetros
     if st.button("Modificar parámetros"):
         st.session_state.mostrar_pantalla2 = False
 
-    # Mensaje final
-    st.markdown(
-        """
-        ### Llevá tu visión a la realidad  
-        Copiá tu descripción personalizada, traducila al inglés o hacé clic en "Modificar parámetros"  
-        para realizar ajustes adicionales. ¡Usá este texto en herramientas de IA para crear imágenes únicas!
-        """
-    )
+# Ejecuta Pantalla 2
+if __name__ == "__main__":
+    configurar_pantalla2()
