@@ -83,21 +83,11 @@ def generar_prompt(params):
     """
     prompt_parts = []
 
-    # 1. Inicio obligatorio
-    prompt_parts.append("Imagina")
-
-    # 2. Tipo de Imagen
-    if params.get("tipo_de_imagen"):
-        if params["tipo_de_imagen"] == "Otro" and params.get("tipo_de_imagen_personalizado"):
-            prompt_parts.append(f"{params['tipo_de_imagen_personalizado'].lower()}")
-        else:
-            prompt_parts.append(f"{params['tipo_de_imagen'].lower()} (tipo de imagen)")
-
-    # 3. Idea Inicial
+    # 1. Idea Inicial (obligatorio)
     if params.get("idea_inicial"):
-        prompt_parts.append(f"que represente {params['idea_inicial'].lower()} (idea inicial)")
+        prompt_parts.append(f"{params['idea_inicial'].lower()} (idea inicial)")
 
-    # 4. Propósito y Subpropósito
+    # 2. Propósito y Subpropósito (obligatorio)
     if params.get("proposito_categoria"):
         if params["proposito_categoria"] == "Otro" and params.get("proposito_personalizado"):
             prompt_parts.append(f"diseñada para un propósito que evoque {params['proposito_personalizado'].lower()}")
@@ -107,14 +97,14 @@ def generar_prompt(params):
                 proposito_text += f", con un enfoque en {params['subpropósito'].lower()} (subpropósito)"
             prompt_parts.append(proposito_text)
 
-    # 5. Estilo Artístico
+    # 3. Estilo Artístico (obligatorio)
     if params.get("estilo_artístico"):
         if params["estilo_artístico"] == "Otro" and params.get("estilo_artístico_personalizado"):
             prompt_parts.append(f"inspirada en {params['estilo_artístico_personalizado'].lower()}")
         else:
             prompt_parts.append(f"inspirada en un estilo {params['estilo_artístico'].lower()} (estilo artístico)")
 
-    # Opcionales
+    # 4. Opcionales
     if params.get("iluminación"):
         prompt_parts.append(f"iluminada con {params['iluminación'].lower()} (iluminación)")
     if params.get("plano_fotográfico"):
