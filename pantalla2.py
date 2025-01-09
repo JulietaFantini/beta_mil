@@ -11,17 +11,18 @@ def configurar_pantalla2():
             st.session_state.mostrar_pantalla2 = False
         return
 
-    params = st.session_state.params
+    # Encabezado y texto de introducción dentro de un contenedor para evitar desplazamientos
+    with st.container():
+        st.title("Tu descripción detallada está lista")
+        st.markdown(
+            """
+            A continuación encontrarás el texto generado a partir de tus selecciones.  
+            Este texto está optimizado para herramientas de generación de imágenes con IA.  
+            Podés copiarlo, traducirlo o ajustarlo según tus necesidades.
+            """
+        )
 
-    # Encabezado y texto de introducción
-    st.title("Tu descripción detallada está lista")
-    st.markdown(
-        """
-        A continuación encontrarás el texto generado a partir de tus selecciones.  
-        Este texto está optimizado para herramientas de generación de imágenes con IA.  
-        Podés copiarlo, traducirlo o ajustarlo según tus necesidades.
-        """
-    )
+    params = st.session_state.params
 
     # Generar el prompt
     prompt = generar_prompt(params)
@@ -88,21 +89,18 @@ def generar_prompt(params):
     # 2. Tipo de Imagen
     if params.get("tipo_de_imagen"):
         if params["tipo_de_imagen"] == "Otro" and params.get("tipo_de_imagen_personalizado"):
-            prompt_parts.append(f"{params['tipo_de_imagen_personalizado']}")
+            prompt_parts.append(f"{params['tipo_de_imagen_personalizado'].lower()}")
         else:
-            prompt_parts.append(f"una {params['tipo_de_imagen'].lower()} (tipo de imagen)")
+            prompt_parts.append(f"{params['tipo_de_imagen'].lower()} (tipo de imagen)")
 
     # 3. Idea Inicial
     if params.get("idea_inicial"):
-        if params["idea_inicial"] == "Otro" and params.get("idea_inicial_personalizado"):
-            prompt_parts.append(f"que represente {params['idea_inicial_personalizado']}")
-        else:
-            prompt_parts.append(f"que represente {params['idea_inicial']} (idea inicial)")
+        prompt_parts.append(f"que represente {params['idea_inicial'].lower()} (idea inicial)")
 
     # 4. Propósito y Subpropósito
     if params.get("proposito_categoria"):
         if params["proposito_categoria"] == "Otro" and params.get("proposito_personalizado"):
-            prompt_parts.append(f"diseñada para un propósito que evoque {params['proposito_personalizado']}")
+            prompt_parts.append(f"diseñada para un propósito que evoque {params['proposito_personalizado'].lower()}")
         else:
             proposito_text = f"diseñada para {params['proposito_categoria'].lower()} (propósito)"
             if params.get("subpropósito"):
@@ -112,7 +110,7 @@ def generar_prompt(params):
     # 5. Estilo Artístico
     if params.get("estilo_artístico"):
         if params["estilo_artístico"] == "Otro" and params.get("estilo_artístico_personalizado"):
-            prompt_parts.append(f"inspirada en {params['estilo_artístico_personalizado']}")
+            prompt_parts.append(f"inspirada en {params['estilo_artístico_personalizado'].lower()}")
         else:
             prompt_parts.append(f"inspirada en un estilo {params['estilo_artístico'].lower()} (estilo artístico)")
 
@@ -120,17 +118,17 @@ def generar_prompt(params):
     if params.get("iluminación"):
         prompt_parts.append(f"iluminada con {params['iluminación'].lower()} (iluminación)")
     if params.get("plano_fotográfico"):
-        prompt_parts.append(f"capturada desde un {params['plano_fotográfico'].lower()} (plano fotográfico)")
+        prompt_parts.append(f"capturada desde {params['plano_fotográfico'].lower()} (plano fotográfico)")
     if params.get("composición"):
-        prompt_parts.append(f"siguiendo una composición basada en la {params['composición'].lower()} (composición)")
+        prompt_parts.append(f"siguiendo una composición basada en {params['composición'].lower()} (composición)")
     if params.get("paleta_de_colores"):
         prompt_parts.append(f"utilizando una paleta de colores {params['paleta_de_colores'].lower()} (paleta de colores)")
     if params.get("textura"):
         prompt_parts.append(f"destacando por sus texturas {params['textura'].lower()} (textura)")
     if params.get("resolucion"):
-        prompt_parts.append(f"diseñada en una resolución de {params['resolucion']} (resolución)")
+        prompt_parts.append(f"diseñada en una resolución de {params['resolucion'].split(' ')[0]} (resolución)")
     if params.get("aspecto"):
-        prompt_parts.append(f"con una relación de aspecto de {params['aspecto']} (relación de aspecto)")
+        prompt_parts.append(f"con una relación de aspecto de {params['aspecto'].split(' ')[0]} (relación de aspecto)")
 
     # Combinar todo
     return ", ".join(prompt_parts) + "."
