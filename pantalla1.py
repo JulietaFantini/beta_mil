@@ -26,6 +26,8 @@ def parametros_obligatorios(params):
         params["tipo_de_imagen_personalizado"] = st.text_input(
             "Describe el tipo de imagen aquí (ej.: 'Collage surrealista'):"
         )
+        if not params["tipo_de_imagen_personalizado"]:
+            st.warning("Por favor, describe el tipo de imagen si seleccionaste 'Otro'.")
 
     # Idea Inicial
     st.subheader("Idea inicial")
@@ -49,6 +51,8 @@ def parametros_obligatorios(params):
         params["estilo_artístico_personalizado"] = st.text_input(
             "Describí tu estilo artístico personalizado (ej.: 'realismo fotográfico con elementos surrealistas'):"
         )
+        if not params["estilo_artístico_personalizado"]:
+            st.warning("Por favor, describe el estilo artístico si seleccionaste 'Otro'.")
 
     # Propósito de la Imagen
     st.subheader("Propósito de la imagen")
@@ -162,7 +166,14 @@ def configurar_pantalla1():
         "Herramienta para diseñar imágenes únicas y generar descripciones efectivas para IA. Comienza completando los campos obligatorios."
     )
 
+    # Captura de obligatorios
     params = parametros_obligatorios(params)
+
+    # Captura de opcionales
+    params = parametros_opcionales(params)
+
+    # Guardar en session_state
+    st.session_state.params = params
 
     if st.button("Validar y continuar"):
         errores = validar_errores(params)
