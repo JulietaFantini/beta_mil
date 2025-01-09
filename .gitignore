@@ -1,0 +1,20 @@
+# Archivos de Python compilados
+*.pyc
+__pycache__/
+
+# Entornos virtuales
+venv/
+.env
+
+# Archivos de configuración de Streamlit
+.streamlit/
+
+# Archivos temporales de sistema
+*.swp
+*.swo
+
+# Archivos de logs
+*.log
+
+# Archivos de test (si los hubiera)
+tests/*
