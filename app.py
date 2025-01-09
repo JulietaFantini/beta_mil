@@ -1,5 +1,4 @@
-import os
-os.environ["WATCHDOG_OBSERVERS"] = "polling"
+
 
 import streamlit as st
 from pantalla1 import configurar_pantalla1
