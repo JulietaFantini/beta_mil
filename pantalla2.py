@@ -13,56 +13,45 @@ def configurar_pantalla2():
 
     params = st.session_state.params
 
-    # Depuración: Mostrar datos recibidos
-    st.write("Datos recibidos en Pantalla 2:", params)
-
     # Encabezado y texto de introducción
     st.title("Tu descripción detallada está lista")
     st.markdown(
         """
-        Debajo encontrarás el texto generado a partir de tus selecciones. Reúne todos los detalles en una descripción efectiva lista para usar en herramientas de IA.
-        Revisá el texto y realizá los ajustes necesarios para obtener los mejores resultados en la generación de imágenes.
+        A continuación encontrarás el texto generado a partir de tus selecciones.  
+        Este texto está optimizado para herramientas de generación de imágenes con IA.  
+        Podés copiarlo o editarlo según tus necesidades.
         """
     )
 
     # Generar el prompt
     prompt = generar_prompt(params)
 
-    # Cuadro Editable para el Prompt
-    st.subheader("Descripción detallada - Editá y personalizá si es necesario")
-    texto_editable = st.text_area(
-        label="Editá tu descripción aquí:",
+    # Mostrar el prompt en un cuadro editable
+    st.text_area(
+        label="Texto generado - Editá y personalizá si es necesario:",
         value=prompt,
         height=300,
         key="texto_editable"
     )
 
-    # Cuadro de Copia con el Texto Actualizado
-    st.subheader("Texto para copiar")
-    st.code(texto_editable, language="")
-
-    # Sección: Traducción al Inglés
-    st.subheader("Traducción al inglés")
-    st.markdown(
-        """
-        **¿Por qué traducir?**  
-        Muchas herramientas de IA están optimizadas para procesar descripciones en inglés. Usa el botón de traducción para llevar tu descripción a Google Translate.
-        """
+    # Botón nativo para copiar texto
+    st.download_button(
+        label="Descargar descripción como archivo .txt",
+        data=prompt,
+        file_name="descripcion_generada.txt",
+        mime="text/plain"
     )
-    if st.button("Abrir en Google Translate"):
-        google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={texto_editable.replace(' ', '%20')}"
-        st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
 
     # Botón para modificar parámetros
     if st.button("Modificar Parámetros"):
         st.session_state.mostrar_pantalla2 = False
 
     # Mensaje final
-    st.subheader("Llevá tu visión a la realidad")
     st.markdown(
         """
-        Con tu descripción personalizada, estás listo para generar imágenes asombrosas usando herramientas de inteligencia artificial. 
-        Copiá el texto generado y pegalo en la herramienta de tu elección. ¡Dejá volar tu creatividad y comenzá a crear imágenes únicas!
+        ### Llevá tu visión a la realidad  
+        Copiá tu descripción personalizada o hacé clic en "Modificar Parámetros" para realizar ajustes adicionales.  
+        ¡Usá este texto en herramientas de IA para crear imágenes increíbles!
         """
     )
 
@@ -70,7 +59,6 @@ def generar_prompt(params):
     """
     Genera un texto narrativo a partir de los parámetros ingresados.
     """
-    st.write("Parámetros procesados para el prompt:", params)  # Depuración
     prompt_parts = []
 
     if params.get("idea_inicial"):
@@ -79,8 +67,6 @@ def generar_prompt(params):
 
     if params.get("tipo_de_imagen"):
         tipo = params["tipo_de_imagen"]
-        if tipo == "Otro" and params.get("tipo_de_imagen_personalizado"):
-            tipo = params["tipo_de_imagen_personalizado"]
         prompt_parts.append(f", representada como una {tipo.lower()}.")
 
     if params.get("proposito_categoria"):
@@ -92,10 +78,32 @@ def generar_prompt(params):
 
     if params.get("estilo_artístico"):
         estilo = params["estilo_artístico"]
-        if estilo == "Otro" and params.get("estilo_artístico_personalizado"):
-            estilo = params["estilo_artístico_personalizado"]
         prompt_parts.append(f"Inspirada en un estilo {estilo.lower()}.")
 
-    # Resto de parámetros...
+    if params.get("iluminación"):
+        iluminacion_text = params["iluminación"]
+        prompt_parts.append(f"Iluminada con {iluminacion_text.lower()}.")
+
+    if params.get("plano_fotográfico"):
+        prompt_parts.append(f"Capturada desde un {params['plano_fotográfico'].lower()}.")
+
+    if params.get("composición"):
+        composicion_text = params["composición"]
+        prompt_parts.append(f"Siguiendo una composición basada en la {composicion_text.lower()}.")
+
+    if params.get("paleta_de_colores"):
+        color_text = params["paleta_de_colores"]
+        prompt_parts.append(f"Utiliza una paleta de colores {color_text.lower()}.")
+
+    if params.get("textura"):
+        textura_text = params["textura"]
+        prompt_parts.append(f"Destaca por sus texturas {textura_text.lower()}.")
+
+    if params.get("resolucion"):
+        prompt_parts.append(f"Resolución {params['resolucion']}.")
+
+    if params.get("aspecto"):
+        aspect_ratio = params["aspecto"]
+        prompt_parts.append(f"Con relación de aspecto {aspect_ratio.lower()}.")
 
     return " ".join(prompt_parts)
