@@ -14,29 +14,5 @@ Esta aplicación permite a los usuarios generar descripciones detalladas (prompt
 ## Instalación
 1. Clona este repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/nombre-del-repositorio.git
-   cd nombre-del-repositorio
-   ```
-2. Instala las dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. Ejecuta la aplicación:
-   ```bash
-   streamlit run app.py
-   ```
-
-## Uso
-1. Configura los parámetros en la Pantalla 1.
-2. Revisa y ajusta el prompt generado en la Pantalla 2.
-3. Usa las herramientas recomendadas para generar imágenes con IA.
-
-## Herramientas Recomendadas
-- [**DALL-E**](https://openai.com/dall-e)
-- [**Midjourney**](https://www.midjourney.com/)
-- [**Stable Diffusion**](https://stability.ai/)
-- [**Canva**](https://www.canva.com/)
-- [**Adobe Firefly**](https://www.adobe.com/sensei/generative-ai/adobe-firefly.html)
-
-## Contribuciones
-¡Las contribuciones son bienvenidas! Por favor, abre un issue o un pull request.
+   git clone https://github.com/JulietaFantini/beta_mil.git
+   cd beta_mil
