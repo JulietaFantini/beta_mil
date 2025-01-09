@@ -13,6 +13,9 @@ def configurar_pantalla2():
 
     params = st.session_state.params
 
+    # Depuración: Mostrar datos recibidos
+    st.write("Datos recibidos en Pantalla 2:", params)
+
     # Encabezado y texto de introducción
     st.title("Tu descripción detallada está lista")
     st.markdown(
@@ -30,13 +33,13 @@ def configurar_pantalla2():
     texto_editable = st.text_area(
         label="Editá tu descripción aquí:",
         value=prompt,
-        height=300,  # Altura ajustada para mayor legibilidad
+        height=300,
         key="texto_editable"
     )
 
     # Cuadro de Copia con el Texto Actualizado
     st.subheader("Texto para copiar")
-    st.code(texto_editable, language="")  # Botón nativo de copiar funcional
+    st.code(texto_editable, language="")
 
     # Sección: Traducción al Inglés
     st.subheader("Traducción al inglés")
@@ -49,18 +52,6 @@ def configurar_pantalla2():
     if st.button("Abrir en Google Translate"):
         google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={texto_editable.replace(' ', '%20')}"
         st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
-
-    # Sección: Herramientas Recomendadas
-    st.subheader("Herramientas recomendadas")
-    st.markdown(
-        """
-        - [**DALL-E**](https://openai.com/dall-e): Ideal para realismo y precisión.  
-        - [**Midjourney**](https://www.midjourney.com/): Excelente para resultados artísticos.  
-        - [**Stable Diffusion**](https://stability.ai/): Perfecto para personalización detallada.  
-        - [**Canva**](https://www.canva.com/): Integra IA con diseño gráfico.  
-        - [**Adobe Firefly**](https://www.adobe.com/sensei/generative-ai/adobe-firefly.html): Herramienta profesional con IA.  
-        """
-    )
 
     # Botón para modificar parámetros
     if st.button("Modificar Parámetros"):
@@ -77,8 +68,9 @@ def configurar_pantalla2():
 
 def generar_prompt(params):
     """
-    Genera un texto narrativo a partir de los parámetros ingresados, optimizando la coherencia y fluidez.
+    Genera un texto narrativo a partir de los parámetros ingresados.
     """
+    st.write("Parámetros procesados para el prompt:", params)  # Depuración
     prompt_parts = []
 
     if params.get("idea_inicial"):
@@ -87,42 +79,23 @@ def generar_prompt(params):
 
     if params.get("tipo_de_imagen"):
         tipo = params["tipo_de_imagen"]
+        if tipo == "Otro" and params.get("tipo_de_imagen_personalizado"):
+            tipo = params["tipo_de_imagen_personalizado"]
         prompt_parts.append(f", representada como una {tipo.lower()}.")
 
     if params.get("proposito_categoria"):
-        subproposito = params.get("subproposito", "").lower()
+        subproposito = params.get("subpropósito", "").lower()
         proposito_text = f"diseñada para {params['proposito_categoria'].lower()}"
         if subproposito:
             proposito_text += f", con enfoque en {subproposito}"
         prompt_parts.append(f"{proposito_text}.")
 
     if params.get("estilo_artístico"):
-        prompt_parts.append(f"Inspirada en un estilo {params['estilo_artístico'].lower()}.")
+        estilo = params["estilo_artístico"]
+        if estilo == "Otro" and params.get("estilo_artístico_personalizado"):
+            estilo = params["estilo_artístico_personalizado"]
+        prompt_parts.append(f"Inspirada en un estilo {estilo.lower()}.")
 
-    if params.get("iluminación"):
-        iluminacion_text = params["iluminación"]
-        prompt_parts.append(f"Iluminada con {iluminacion_text.lower()}.")
-
-    if params.get("plano_fotográfico"):
-        prompt_parts.append(f"Capturada desde un {params['plano_fotográfico'].lower()}.")
-
-    if params.get("composición"):
-        composicion_text = params["composición"]
-        prompt_parts.append(f"Siguiendo una composición basada en la {composicion_text.lower()}.")
-
-    if params.get("paleta_de_colores"):
-        color_text = params["paleta_de_colores"]
-        prompt_parts.append(f"Utiliza una paleta de colores {color_text.lower()}.")
-
-    if params.get("textura"):
-        textura_text = params["textura"]
-        prompt_parts.append(f"Destaca por sus texturas {textura_text.lower()}.")
-
-    if params.get("resolucion"):
-        prompt_parts.append(f"Resolución {params['resolucion']}.")
-
-    if params.get("aspecto"):
-        aspect_ratio = params["aspecto"]
-        prompt_parts.append(f"Con relación de aspecto {aspect_ratio.lower()}.")
+    # Resto de parámetros...
 
     return " ".join(prompt_parts)
