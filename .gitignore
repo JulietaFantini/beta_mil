@@ -17,4 +17,4 @@ venv/
 *.log
 
 # Archivos de test (si los hubiera)
-tests/*
+/tests/*
