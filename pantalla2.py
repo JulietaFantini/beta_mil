@@ -1,4 +1,86 @@
 import streamlit as st
+import textwrap
+
+# Constantes para verbos y frases de "Otro"
+VERBOS_BASE = {
+    'representar': 'que represente',
+    'proposito': 'diseñada para',
+    'estilo': 'inspirada en un estilo',
+    'iluminacion': 'iluminada con',
+    'plano': 'capturada desde',
+    'composicion': 'siguiendo una composición basada en',
+}
+
+FRASES_OTRO = {
+    'tipo_imagen': 'un tipo de imagen inspirado en',
+    'idea_inicial': 'una idea inicial basada en',
+    'proposito': 'un propósito que evoque',
+    'estilo': 'un estilo artístico que recuerde a',
+}
+
+def generar_prompt(params):
+    """
+    Genera un texto narrativo a partir de los parámetros ingresados.
+    """
+    prompt_parts = []
+
+    # 1. Inicio obligatorio con "Imagina"
+    prompt_parts.append("Imagina")
+
+    # 2. Tipo de imagen
+    if params.get("tipo_de_imagen"):
+        if params["tipo_de_imagen"] == "Otro" and params.get("tipo_de_imagen_personalizado"):
+            valor = params['tipo_de_imagen_personalizado'].lower()
+            prompt_parts.append(f"{FRASES_OTRO['tipo_imagen']} {valor}")
+        else:
+            prompt_parts.append(f"{params['tipo_de_imagen'].lower()} (tipo de imagen)")
+
+    # 3. Idea inicial
+    if params.get("idea_inicial"):
+        if params["idea_inicial"] == "Otro" and params.get("idea_inicial_personalizado"):
+            valor = params['idea_inicial_personalizado'].lower()
+            prompt_parts.append(f"{FRASES_OTRO['idea_inicial']} {valor}")
+        else:
+            prompt_parts.append(f"{VERBOS_BASE['representar']} {params['idea_inicial'].lower()} (idea inicial)")
+
+    # 4. Propósito y subpropósito
+    if params.get("proposito_categoria"):
+        if params["proposito_categoria"] == "Otro" and params.get("proposito_personalizado"):
+            valor = params['proposito_personalizado'].lower()
+            prompt_parts.append(f"{FRASES_OTRO['proposito']} {valor}")
+        else:
+            proposito_text = f"{VERBOS_BASE['proposito']} {params['proposito_categoria'].lower()} (propósito)"
+            if params.get("subpropósito"):
+                proposito_text += f", con un enfoque en {params['subpropósito'].lower()} (subpropósito)"
+            prompt_parts.append(proposito_text)
+
+    # 5. Estilo artístico
+    if params.get("estilo_artístico"):
+        if params["estilo_artístico"] == "Otro" and params.get("estilo_artístico_personalizado"):
+            valor = params['estilo_artístico_personalizado'].lower()
+            prompt_parts.append(f"{FRASES_OTRO['estilo']} {valor}")
+        else:
+            prompt_parts.append(f"{VERBOS_BASE['estilo']} {params['estilo_artístico'].lower()} (estilo artístico)")
+
+    # Opcionales (iluminación, plano, etc.)
+    opcionales = {
+        'iluminación': VERBOS_BASE['iluminacion'],
+        'plano_fotográfico': VERBOS_BASE['plano'],
+        'composición': VERBOS_BASE['composicion'],
+        'paleta_de_colores': 'utilizando una paleta de colores',
+        'textura': 'destacando por sus texturas',
+        'resolucion': 'diseñada en una resolución de',
+        'aspecto': 'con una relación de aspecto de',
+    }
+
+    for campo, verbo in opcionales.items():
+        if params.get(campo):
+            valor = params[campo].split(" ")[0].lower() if campo in ['resolucion', 'aspecto'] else params[campo].lower()
+            prompt_parts.append(f"{verbo} {valor} ({campo})")
+
+    # Formato final
+    prompt = ". ".join(filter(None, prompt_parts)) + "."
+    return textwrap.fill(prompt, width=80)
 
 def configurar_pantalla2():
     """
@@ -76,49 +158,3 @@ def configurar_pantalla2():
         para realizar ajustes adicionales. ¡Usá este texto en herramientas de IA para crear imágenes únicas!
         """
     )
-
-def generar_prompt(params):
-    """
-    Genera un texto narrativo a partir de los parámetros ingresados.
-    """
-    prompt_parts = []
-
-    # 1. Idea Inicial (obligatorio)
-    if params.get("idea_inicial"):
-        prompt_parts.append(f"{params['idea_inicial'].lower()} (idea inicial)")
-
-    # 2. Propósito y Subpropósito (obligatorio)
-    if params.get("proposito_categoria"):
-        if params["proposito_categoria"] == "Otro" and params.get("proposito_personalizado"):
-            prompt_parts.append(f"diseñada para un propósito que evoque {params['proposito_personalizado'].lower()}")
-        else:
-            proposito_text = f"diseñada para {params['proposito_categoria'].lower()} (propósito)"
-            if params.get("subpropósito"):
-                proposito_text += f", con un enfoque en {params['subpropósito'].lower()} (subpropósito)"
-            prompt_parts.append(proposito_text)
-
-    # 3. Estilo Artístico (obligatorio)
-    if params.get("estilo_artístico"):
-        if params["estilo_artístico"] == "Otro" and params.get("estilo_artístico_personalizado"):
-            prompt_parts.append(f"inspirada en {params['estilo_artístico_personalizado'].lower()}")
-        else:
-            prompt_parts.append(f"inspirada en un estilo {params['estilo_artístico'].lower()} (estilo artístico)")
-
-    # 4. Opcionales
-    if params.get("iluminación"):
-        prompt_parts.append(f"iluminada con {params['iluminación'].lower()} (iluminación)")
-    if params.get("plano_fotográfico"):
-        prompt_parts.append(f"capturada desde {params['plano_fotográfico'].lower()} (plano fotográfico)")
-    if params.get("composición"):
-        prompt_parts.append(f"siguiendo una composición basada en {params['composición'].lower()} (composición)")
-    if params.get("paleta_de_colores"):
-        prompt_parts.append(f"utilizando una paleta de colores {params['paleta_de_colores'].lower()} (paleta de colores)")
-    if params.get("textura"):
-        prompt_parts.append(f"destacando por sus texturas {params['textura'].lower()} (textura)")
-    if params.get("resolucion"):
-        prompt_parts.append(f"diseñada en una resolución de {params['resolucion'].split(' ')[0]} (resolución)")
-    if params.get("aspecto"):
-        prompt_parts.append(f"con una relación de aspecto de {params['aspecto'].split(' ')[0]} (relación de aspecto)")
-
-    # Combinar todo
-    return ", ".join(prompt_parts) + "."
