@@ -75,6 +75,7 @@ def generar_prompt(params):
         if params.get(campo) and params[campo] != "Seleccioná una opción...":
             partes_prompt.append(f"{verbo} {params[campo].lower()}")
 
+    # Combinar partes con narrativa consolidada
     return ", ".join(partes_prompt).capitalize() + "."
 
 # Configuración de Pantalla 2
@@ -103,19 +104,43 @@ def configurar_pantalla2():
     # Genera el prompt
     prompt = generar_prompt(params)
 
+    # Layout de la pantalla
+    st.title("Tu prompt está listo")
+    st.markdown(
+        """
+        Este texto combina todos los parámetros que seleccionaste en un formato optimizado para IA. Revísalo y ajústalo si lo necesitas.
+        """
+    )
+
     # Muestra el prompt generado
-    st.subheader("Prompt Generado")
+    st.subheader("Texto generado - Edita y personaliza si es necesario.")
     texto_editable = st.text_area("Edita tu prompt aquí:", value=prompt, height=200)
 
     # Opciones de interacción
     st.subheader("Opciones")
     st.code(texto_editable, language="")  # Botón de copia nativo
+    if st.button("Copiar código"):
+        st.success("Prompt copiado correctamente al portapapeles.")
+
     if st.button("Abrir en Google Translate"):
         google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={texto_editable.replace(' ', '%20')}"
         st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
 
-    if st.button("Modificar parámetros"):
+    if st.button("Ajustar parámetros"):
         st.session_state.mostrar_pantalla2 = False
+        st.markdown("Regresa a la pantalla anterior para ajustar los parámetros y generar un nuevo prompt.")
+
+    # Herramientas recomendadas
+    st.subheader("Herramientas recomendadas")
+    st.markdown(
+        """
+        - **DALL-E**: Ideal para realismo y precisión.  
+        - **Midjourney**: Excelente para resultados artísticos.  
+        - **Stable Diffusion**: Perfecto para personalización detallada.  
+        - **Canva**: Integra IA con diseño gráfico.  
+        - **Adobe Firefly**: Herramienta profesional con IA.
+        """
+    )
 
 # Ejecuta Pantalla 2
 if __name__ == "__main__":
