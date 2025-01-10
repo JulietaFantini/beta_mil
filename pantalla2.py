@@ -57,11 +57,13 @@ def generar_prompt(params):
             estilo = params.get("estilo_artístico_personalizado", "")
             prompt_parts.append(f"{FRASES_OTRO['estilo_artistico']}: {estilo}")
         else:
-            prompt_parts.append(f"{TEMPLATE_BASE['estilo']} {params['estilo_artístico'].lower()}")
+            prompt_parts.append(f"{TEMPLATE_BASE['estilo']} {params['estilo_artístico'].lower()}"
+)
 
     # Iluminación
     if params.get("iluminación"):
-        prompt_parts.append(f"{TEMPLATE_BASE['iluminacion']} {params['iluminación'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['iluminacion']} {params['iluminación'].lower()}"
+)
 
     # Plano Fotográfico
     if params.get("plano_fotográfico"):
@@ -70,11 +72,13 @@ def generar_prompt(params):
 
     # Composición
     if params.get("composicion"):
-        prompt_parts.append(f"{TEMPLATE_BASE['composicion']} {params['composicion'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['composicion']} {params['composicion'].lower()}"
+)
 
     # Paleta de Colores y Textura
     if params.get("paleta_de_colores"):
-        prompt_parts.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}"
+)
     if params.get("textura"):
         prompt_parts.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}"
 )
@@ -85,12 +89,7 @@ def generar_prompt(params):
 )
 
     # Combinar partes
-    return "\n\n".join([
-        ". ".join(prompt_parts[:2]).capitalize() + ".",
-        ". ".join(prompt_parts[2:5]).capitalize() + ".",
-        ". ".join(prompt_parts[5:7]).capitalize() + ".",
-        ". ".join(prompt_parts[7:]).capitalize() + "."
-    ])
+    return " ".join(prompt_parts).capitalize() + "."
 
 def mostrar_prompt(prompt):
     st.subheader("Descripción Detallada")
@@ -99,7 +98,7 @@ def mostrar_prompt(prompt):
     prompt_editable = st.text_area(
         "Versión con referencias - Podés editar el texto:",
         value=prompt,
-        height=300
+        height=200
     )
 
     # Versión limpia
@@ -107,6 +106,11 @@ def mostrar_prompt(prompt):
     prompt_limpio = re.sub(r'\s+', ' ', prompt_limpio)
 
     st.subheader("Texto Final para Copiar")
+    st.markdown(
+        """
+        **Haz clic en el botón para copiar el texto generado en tu portapapeles y usarlo en tu herramienta de IA preferida.**
+        """
+    )
     st.code(prompt_limpio, language="")
 
     return prompt_limpio
@@ -137,11 +141,12 @@ def configurar_pantalla2():
     st.subheader("Traducción al Inglés")
     st.markdown(
         """
-        Muchas herramientas de IA están optimizadas para prompts en inglés. Usa el botón para traducir tu descripción a través de Google Translate.
+        Traducí tu descripción al inglés para mejorar la compatibilidad con herramientas de IA.  
+        Al hacer clic en el enlace, tu texto se abrirá directamente en Google Translate.
         """
     )
     google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={re.sub(r'\s+', '%20', prompt_final)}"
-    st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
+    st.markdown(f"[Traducir el texto en Google Translate]({google_translate_url})", unsafe_allow_html=True)
 
     st.subheader("Explora Herramientas Recomendadas")
     st.markdown(
@@ -155,13 +160,13 @@ def configurar_pantalla2():
         """
     )
 
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Modificar parámetros"):
-            st.session_state.mostrar_pantalla2 = False
-    with col2:
-        if st.button("Abrir en Google Translate"):
-            st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
+    if st.button("Modificar parámetros"):
+        st.markdown(
+            """
+            **Regresa a la pantalla anterior para ajustar los parámetros y generar un nuevo prompt.**
+            """
+        )
+        st.session_state.mostrar_pantalla2 = False
 
 if __name__ == "__main__":
     configurar_pantalla2()
