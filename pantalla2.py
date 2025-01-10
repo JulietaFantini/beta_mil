@@ -30,65 +30,47 @@ def validar_parametros(params):
     return errores
 
 def generar_prompt(params):
-    # Primera parte del prompt (idea inicial y tipo de imagen)
-    primera_parte = []
+    prompt_parts = []
+
     if params.get("idea_inicial"):
-        primera_parte.append(f"Imagina {params['idea_inicial'].lower()} representada en una")
+        prompt_parts.append(f"Imagina {params['idea_inicial'].lower()} representada en una")
+
     if params.get("tipo_de_imagen"):
         if params["tipo_de_imagen"] == "Otro":
             tipo = params.get("tipo_de_imagen_personalizado", "")
-            primera_parte[-1] = f"Imagina un concepto inspirado en {tipo}"
+            prompt_parts[-1] = f"Imagina un concepto inspirado en {tipo}"
         else:
-            primera_parte[-1] += f" {params['tipo_de_imagen'].lower()}"
+            prompt_parts[-1] += f" {params['tipo_de_imagen'].lower()}"
 
-    # Segunda parte (propósito y estilo)
-    segunda_parte = []
     if params.get("proposito_categoria"):
         proposito = f"{TEMPLATE_BASE['proposito']} {params['proposito_categoria'].lower()}"
         if params.get("subpropósito"):
             proposito += f", orientada hacia {params['subpropósito'].lower()}"
-        segunda_parte.append(proposito)
-    
+        prompt_parts.append(proposito)
+
     if params.get("estilo_artístico"):
         if params["estilo_artístico"] == "Otro":
             estilo = params.get("estilo_artístico_personalizado", "")
-            segunda_parte.append(f"{FRASES_OTRO['estilo_artistico']}: {estilo}")
+            prompt_parts.append(f"{FRASES_OTRO['estilo_artistico']}: {estilo}")
         else:
-            segunda_parte.append(f"{TEMPLATE_BASE['estilo']} {params['estilo_artístico'].lower()}")
+            prompt_parts.append(f"{TEMPLATE_BASE['estilo']} {params['estilo_artístico'].lower()}")
 
-    # Tercera parte (aspectos técnicos)
-    tercera_parte = []
     if params.get("iluminación"):
-        tercera_parte.append(f"{TEMPLATE_BASE['iluminacion']} {params['iluminación'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['iluminacion']} {params['iluminación'].lower()}")
+
     if params.get("plano_fotográfico"):
-        tercera_parte.append(f"{TEMPLATE_BASE['plano']} {params['plano_fotográfico'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['plano']} {params['plano_fotográfico'].lower()}")
+
     if params.get("composicion"):
-        tercera_parte.append(f"{TEMPLATE_BASE['composicion']} {params['composicion'].lower()}")
-    
-    # Cuarta parte (estilo visual)
-    cuarta_parte = []
+        prompt_parts.append(f"{TEMPLATE_BASE['composicion']} {params['composicion'].lower()}")
+
     if params.get("paleta_de_colores"):
-        cuarta_parte.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}")
     if params.get("textura"):
-        cuarta_parte.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}")
 
-    # Quinta parte (especificaciones técnicas)
-    quinta_parte = []
     if params.get("resolucion") and params.get("aspecto"):
-        quinta_parte.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}")
-
-    # Construir el prompt final
-    prompt_parts = []
-    if primera_parte:
-        prompt_parts.append(" ".join(primera_parte))
-    if segunda_parte:
-        prompt_parts.append(", ".join(segunda_parte))
-    if tercera_parte:
-        prompt_parts.append(". " + ", ".join(tercera_parte))
-    if cuarta_parte:
-        prompt_parts.append(", " + ", ".join(cuarta_parte))
-    if quinta_parte:
-        prompt_parts.append(". " + ", ".join(quinta_parte))
+        prompt_parts.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}")
 
     return " ".join(prompt_parts).capitalize() + "."
 
