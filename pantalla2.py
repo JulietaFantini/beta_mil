@@ -98,10 +98,12 @@ def generar_prompt(params):
 def mostrar_prompt(prompt):
     st.subheader("Descripción Detallada")
 
-    st.markdown("Podés editar la descripción directamente en el cuadro de texto para personalizarla.")
+    st.markdown("""
+    **Nota:** Presioná `Ctrl + Enter` o hacé clic fuera de la caja para confirmar los cambios realizados en el prompt.
+    """)
 
     prompt_editable = st.text_area(
-        "Versión con referencias - Podés editar el texto:",
+        "Editá tu prompt:",
         value=prompt,
         height=200,
         key="editable_prompt"
@@ -147,9 +149,6 @@ def configurar_pantalla2():
     st.write("**DEBUG: Prompt inicial generado antes de mostrar:**", prompt_inicial)
 
     prompt_final = mostrar_prompt(prompt_inicial)
-
-    if st.button("Modificar parámetros"):
-        st.session_state.mostrar_pantalla2 = False
 
 if __name__ == "__main__":
     configurar_pantalla2()
