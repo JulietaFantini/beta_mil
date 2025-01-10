@@ -2,7 +2,7 @@ import streamlit as st
 import re
 
 TEMPLATE_BASE = {
-    "inicio": "Imagina una imagen de una",
+    "inicio": "Imagina",
     "representar": "que represente",
     "proposito": "creada para",
     "estilo": "con el estilo visual del",
@@ -65,7 +65,8 @@ def generar_prompt(params):
 
     # Plano Fotográfico
     if params.get("plano_fotográfico"):
-        prompt_parts.append(f"{TEMPLATE_BASE['plano']} {params['plano_fotográfico'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['plano']} {params['plano_fotográfico'].lower()}"
+)
 
     # Composición
     if params.get("composicion"):
@@ -75,17 +76,24 @@ def generar_prompt(params):
     if params.get("paleta_de_colores"):
         prompt_parts.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}")
     if params.get("textura"):
-        prompt_parts.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}"
+)
 
     # Resolución y Relación de Aspecto
     if params.get("resolucion") and params.get("aspecto"):
-        prompt_parts.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}")
+        prompt_parts.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}"
+)
 
     # Combinar partes
-    return ". ".join(filter(None, prompt_parts)).capitalize() + "."
+    return "\n\n".join([
+        ". ".join(prompt_parts[:2]).capitalize() + ".",
+        ". ".join(prompt_parts[2:5]).capitalize() + ".",
+        ". ".join(prompt_parts[5:7]).capitalize() + ".",
+        ". ".join(prompt_parts[7:]).capitalize() + "."
+    ])
 
 def mostrar_prompt(prompt):
-    st.subheader("Tu descripción detallada está lista")
+    st.subheader("Descripción Detallada")
 
     # Versión editable (con etiquetas)
     prompt_editable = st.text_area(
@@ -98,7 +106,7 @@ def mostrar_prompt(prompt):
     prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
     prompt_limpio = re.sub(r'\s+', ' ', prompt_limpio)
 
-    st.subheader("Versión final para copiar")
+    st.subheader("Texto Final para Copiar")
     st.code(prompt_limpio, language="")
 
     return prompt_limpio
@@ -112,7 +120,7 @@ def configurar_pantalla2():
 )
 
     if "params" not in st.session_state:
-        st.warning("Completá primero los datos básicos")
+        st.warning("Faltan algunos datos importantes. Por favor, vuelve a la pantalla anterior y completa los campos obligatorios.")
         if st.button("Volver a Pantalla 1"):
             st.session_state.mostrar_pantalla2 = False
         return
@@ -126,14 +134,24 @@ def configurar_pantalla2():
     prompt_inicial = generar_prompt(st.session_state.params)
     prompt_final = mostrar_prompt(prompt_inicial)
 
-    st.subheader("Herramientas recomendadas")
+    st.subheader("Traducción al Inglés")
     st.markdown(
         """
-        - **DALL-E**: Ideal para realismo y precisión.  
-        - **Midjourney**: Excelente para resultados artísticos.  
-        - **Stable Diffusion**: Perfecto para personalización detallada.  
-        - **Canva**: Integra IA con diseño gráfico.  
-        - **Adobe Firefly**: Herramienta profesional con IA.
+        Muchas herramientas de IA están optimizadas para prompts en inglés. Usa el botón para traducir tu descripción a través de Google Translate.
+        """
+    )
+    google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={re.sub(r'\s+', '%20', prompt_final)}"
+    st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
+
+    st.subheader("Explora Herramientas Recomendadas")
+    st.markdown(
+        """
+        Explora estas herramientas populares para generar imágenes con IA:
+        - **[DALL-E](https://openai.com/dall-e)**: Realismo y precisión excepcionales.  
+        - **[Midjourney](https://www.midjourney.com/)**: Diseños artísticos únicos.  
+        - **[Stable Diffusion](https://stability.ai/)**: Perfecto para personalización detallada.  
+        - **[Canva](https://www.canva.com/)**: Diseño gráfico con IA integrada.  
+        - **[Adobe Firefly](https://www.adobe.com/sensei/generative-ai/adobe-firefly.html)**: Resultados profesionales con IA.
         """
     )
 
@@ -142,8 +160,8 @@ def configurar_pantalla2():
         if st.button("Modificar parámetros"):
             st.session_state.mostrar_pantalla2 = False
     with col2:
-        google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={re.sub(r'\s+', '%20', prompt_final)}"
-        st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
+        if st.button("Abrir en Google Translate"):
+            st.markdown(f"[Abrir en Google Translate]({google_translate_url})", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     configurar_pantalla2()
