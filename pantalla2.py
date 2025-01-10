@@ -34,7 +34,7 @@ def generar_prompt(params):
 
     # Idea Inicial antes de Tipo de Imagen
     if params.get("idea_inicial"):
-        prompt_parts.append(f"Imagina {params['idea_inicial'].lower()} representada en una")
+        prompt_parts.append(f"Imagina {params['idea_inicial']} representada en una")
 
     # Tipo de Imagen
     if params.get("tipo_de_imagen"):
@@ -57,40 +57,33 @@ def generar_prompt(params):
             estilo = params.get("estilo_artístico_personalizado", "")
             prompt_parts.append(f"{FRASES_OTRO['estilo_artistico']}: {estilo}")
         else:
-            prompt_parts.append(f"{TEMPLATE_BASE['estilo']} {params['estilo_artístico'].lower()}"
-)
+            prompt_parts.append(f"{TEMPLATE_BASE['estilo']} {params['estilo_artístico'].lower()}")
 
     # Iluminación
     if params.get("iluminación"):
-        prompt_parts.append(f"{TEMPLATE_BASE['iluminacion']} {params['iluminación'].lower()}"
-)
+        prompt_parts.append(f"{TEMPLATE_BASE['iluminacion']} {params['iluminación'].lower()}")
 
     # Plano Fotográfico
     if params.get("plano_fotográfico"):
-        prompt_parts.append(f"{TEMPLATE_BASE['plano']} {params['plano_fotográfico'].lower()}"
-)
+        prompt_parts.append(f"{TEMPLATE_BASE['plano']} {params['plano_fotográfico'].lower()}")
 
     # Composición
     if params.get("composicion"):
-        prompt_parts.append(f"{TEMPLATE_BASE['composicion']} {params['composicion'].lower()}"
-)
+        prompt_parts.append(f"{TEMPLATE_BASE['composicion']} {params['composicion'].lower()}")
 
     # Paleta de Colores y Textura
     if params.get("paleta_de_colores"):
-        prompt_parts.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}"
-)
+        prompt_parts.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}")
     if params.get("textura"):
-        prompt_parts.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}"
-)
+        prompt_parts.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}")
 
     # Resolución y Relación de Aspecto
     if params.get("resolucion") and params.get("aspecto"):
-        prompt_parts.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}"
-)
+        prompt_parts.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}")
 
-  # Combinar todo en un párrafo continuo con frases separadas por puntos
-prompt = ". ".join(filter(None, prompt_parts)) + "."
-return ". ".join([frase.strip().capitalize() for frase in prompt.split(".") if frase.strip()])
+    # Combinar todo en un párrafo continuo con frases separadas por puntos
+    prompt = ". ".join(filter(None, prompt_parts)) + "."
+    return ". ".join([frase.strip().capitalize() for frase in prompt.split(".") if frase.strip()])
 
 def mostrar_prompt(prompt):
     st.subheader("Descripción Detallada")
