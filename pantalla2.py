@@ -2,20 +2,6 @@ import streamlit as st
 import re
 
 # Función para validar valores
-TEMPLATE_BASE = {
-    "inicio": "Imagina",
-    "representar": "que represente",
-    "proposito": "creada para",
-    "estilo": "con el estilo visual del",
-    "iluminacion": "La imagen debe iluminarse con",
-    "plano": "capturada desde un",
-    "composicion": "siguiendo una composición de",
-    "paleta": "Debe tener una paleta de colores",
-    "textura": "y una textura",
-    "resolucion": "Finalmente, la resolución debe ser",
-    "aspecto": "con una relación de aspecto de"
-}
-
 def es_valor_valido(valor):
     return valor and isinstance(valor, str) and valor.strip()
 
@@ -52,32 +38,35 @@ def generar_prompt(params):
                 estilo = params.get("estilo_artístico_personalizado", "")
                 prompt_parts.append(f"con un estilo artístico que recuerde a {estilo.lower()}")
         else:
-            prompt_parts.append(f"con el estilo visual del {params['estilo_artístico'].lower()}")
+            prompt_parts.append(f"con el estilo visual del {params['estilo_artístico'].lower()}"
 
     aspectos_tecnicos = []
     if es_valor_valido(params.get("iluminación")):
-        aspectos_tecnicos.append(f"la imagen debe iluminarse con {params['iluminación'].lower()}")
+        aspectos_tecnicos.append(f"la imagen debe iluminarse con {params['iluminación'].lower()}"
     if es_valor_valido(params.get("plano_fotográfico")):
-        aspectos_tecnicos.append(f"capturada desde un {params['plano_fotográfico'].lower()}")
+        aspectos_tecnicos.append(f"capturada desde un {params['plano_fotográfico'].lower()}"
     if es_valor_valido(params.get("composicion")):
-        aspectos_tecnicos.append(f"siguiendo una composición de {params['composicion'].lower()}")
+        aspectos_tecnicos.append(f"siguiendo una composición de {params['composicion'].lower()}"
     if aspectos_tecnicos:
-        prompt_parts.append(". " + ", ".join(aspectos_tecnicos))
+        prompt_parts.append(". " + ", ".join(aspectos_tecnicos)
 
     aspectos_visuales = []
     if es_valor_valido(params.get("paleta_de_colores")):
-        aspectos_visuales.append(f"debe tener una paleta de colores {params['paleta_de_colores'].lower()}")
+        aspectos_visuales.append(f"debe tener una paleta de colores {params['paleta_de_colores'].lower()}"
     if es_valor_valido(params.get("textura")):
-        aspectos_visuales.append(f"y una textura {params['textura'].lower()}")
+        aspectos_visuales.append(f"y una textura {params['textura'].lower()}"
     if aspectos_visuales:
-        prompt_parts.append(", " + ", ".join(aspectos_visuales))
+        prompt_parts.append(", " + ", ".join(aspectos_visuales)
 
     if es_valor_valido(params.get("resolucion")) and es_valor_valido(params.get("aspecto")):
-        prompt_parts.append(f". finalmente, la resolución debe ser {params['resolucion']}, con una relación de aspecto de {params['aspecto'].lower()}")
+        prompt_parts.append(f". finalmente, la resolución debe ser {params['resolucion']}, con una relación de aspecto de {params['aspecto'].lower()}"
 
     prompt = " ".join(filter(None, prompt_parts)).strip()
     prompt = re.sub(r'\s+', ' ', prompt)
-    prompt = prompt.capitalize()
+    prompt = re.sub(r',\s*', ', ', prompt)  # Corregir comas y espacios
+    sentences = re.split(r'(?<=\.)\s+', prompt)  # Separar por puntos para capitalizar
+    prompt = '. '.join(sentence.capitalize() for sentence in sentences)  # Capitalizar frases
+    prompt = re.sub(r'\.\.+', '.', prompt)  # Eliminar puntos duplicados
     if not prompt.endswith('.'):
         prompt += '.'
 
