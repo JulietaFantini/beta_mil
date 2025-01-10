@@ -100,18 +100,15 @@ def mostrar_prompt(prompt):
 
     st.markdown("Podés editar la descripción directamente en el cuadro de texto para personalizarla.")
 
-    st.write("**DEBUG: Prompt inicial generado:**", prompt)
-
     prompt_editable = st.text_area(
         "Versión con referencias - Podés editar el texto:",
         value=prompt,
-        height=200
+        height=200,
+        key="editable_prompt"
     )
 
     prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
     prompt_limpio = re.sub(r'\s+', ' ', prompt_limpio)
-
-    st.write("**DEBUG: Prompt limpio después de edición:**", prompt_limpio)
 
     st.subheader("Texto Final para Copiar")
     st.code(prompt_limpio, language="")
@@ -124,7 +121,7 @@ def configurar_pantalla2():
     st.title("Tu prompt está listo")
     st.markdown("Este texto combina todos los parámetros seleccionados en un formato optimizado para IA.")
 
-    st.write("**DEBUG: session_state actual:**", st.session_state)
+    st.markdown("---")  # Separador visual para comenzar en la parte superior
 
     if "params" not in st.session_state:
         st.warning("Faltan datos importantes. Volvé a la pantalla anterior para completarlos.")
