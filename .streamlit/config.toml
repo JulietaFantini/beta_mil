@@ -1,9 +1,27 @@
 [server]
 fileWatcherType = "poll"
+layout = "wide"                    # Mantener diseño amplio para buen uso del espacio
+initial_sidebar_state = "expanded" # Barra lateral abierta por defecto
 
 [theme]
-primaryColor = '#6B46C1'          # Violeta elegante
-backgroundColor = '#FFFFFF'       # Fondo blanco limpio
-secondaryBackgroundColor = '#F9FAFB'  # Gris suave
-textColor = '#1A202C'             # Casi negro para texto
-font = 'monospace'                # Fuente monoespaciada
+primaryColor = '#6B46C1'           # Violeta elegante (ya definido)
+backgroundColor = '#FFFFFF'        # Fondo blanco limpio
+secondaryBackgroundColor = '#F9FAFB'  # Gris suave para contrastar
+textColor = '#1A202C'              # Texto en negro suave
+font = 'monospace'                 # Tipografía personalizada seleccionada
+
+[title_style]
+fontSize = "1.5rem"                # Tamaño ajustado para títulos (más pequeños que el default)
+fontWeight = "700"                 # Títulos en negrita para destacar
+color = "#6B46C1"                  # Usar el color principal para títulos
+
+[text_style]
+fontSize = "1rem"                  # Tamaño estándar para texto explicativo
+fontWeight = "400"                 # Peso normal para lectura cómoda
+color = "#1A202C"                  # Gris oscuro para buena legibilidad
+
+[input_style]
+fontSize = "0.9rem"                # Tamaño más pequeño para elementos interactivos
+fontWeight = "500"                 # Peso ligeramente más destacado
+color = "#333333"                  # Un gris intermedio para inputs
+backgroundColor = "#F1F5F9"        # Fondo claro específico para inputs
