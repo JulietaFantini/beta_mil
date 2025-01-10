@@ -102,17 +102,20 @@ def mostrar_prompt(prompt):
         st.session_state["editando"] = False
 
     if st.session_state["editando"]:
-        st.markdown("### ¿Cómo optimizar tu prompt?")
+        st.markdown("### ¡Estás a un paso de un gran resultado!")
         st.markdown(
             """
-            - Incluí detalles clave como el propósito, el estilo visual y el tipo de imagen.
-            - Editá el texto respetando estos parámetros para resultados óptimos.
-            - **Tip:** Usá frases claras y descriptivas.
+            Revisá tu descripción y asegurate de que sea clara, detallada y específica. Podés ajustar detalles o agregar elementos clave para enriquecer el diseño.
+
+            **Tip:** Un prompt robusto combina un propósito claro, un estilo definido y detalles visuales únicos.  
+            *Ejemplo*: "Imagina una ciudad futurista en un amanecer rosado, representada en un render 3D con estilo surrealista."
             """
         )
 
         st.markdown("### Parámetros Actuales")
-        st.write(st.session_state.get("params", {}))
+        params = st.session_state.get("params", {})
+        for key, value in params.items():
+            st.write(f"- **{key.replace('_', ' ').capitalize()}:** {value}")
 
         prompt_editable = st.text_area(
             "Editá tu prompt:",
@@ -121,16 +124,22 @@ def mostrar_prompt(prompt):
             key="editable_prompt"
         )
 
+        st.markdown(
+            "**Nota:** Presioná `Ctrl + Enter` o hacé clic fuera de la caja para confirmar los cambios realizados en el prompt."
+        )
+
         prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
         prompt_limpio = re.sub(r'\s+', ' ', prompt_limpio)
 
-        if st.button("Guardar Cambios"):
-            st.session_state["editando"] = False
-            return prompt_limpio
-
-        if st.button("Cancelar"):
-            st.session_state["editando"] = False
-            return prompt
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("Guardar Cambios"):
+                st.session_state["editando"] = False
+                return prompt_limpio
+        with col2:
+            if st.button("Cancelar"):
+                st.session_state["editando"] = False
+                return prompt
 
     else:
         st.markdown(prompt)
