@@ -97,7 +97,8 @@ def mostrar_prompt(prompt):
         "Versión con referencias - Podés editar el texto:",
         value=prompt,
         height=200,
-        key="editable_prompt"
+        key="editable_prompt",
+        on_change=lambda: st.session_state.update({"editable_prompt": st.session_state.editable_prompt})
     )
 
     prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
@@ -114,7 +115,11 @@ def configurar_pantalla2():
     st.markdown("Este texto combina todos los parámetros que seleccionaste en un formato optimizado para IA. Revísalo, edítalo si es necesario y cópialo fácilmente.")
 
     # Forzar la página al inicio al cargarse
-    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
+    st.markdown("""
+        <script>
+        setTimeout(() => window.scrollTo(0, 0), 0);
+        </script>
+    """, unsafe_allow_html=True)
 
     if "params" not in st.session_state:
         st.warning("Faltan algunos datos importantes. Por favor, vuelve a la pantalla anterior y completa los campos obligatorios.")
