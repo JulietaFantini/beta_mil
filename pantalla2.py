@@ -98,24 +98,47 @@ def generar_prompt(params):
 def mostrar_prompt(prompt):
     st.subheader("Descripción Detallada")
 
-    st.markdown("""
-    **Nota:** Presioná `Ctrl + Enter` o hacé clic fuera de la caja para confirmar los cambios realizados en el prompt.
-    """)
+    if "editando" not in st.session_state:
+        st.session_state["editando"] = False
 
-    prompt_editable = st.text_area(
-        "Editá tu prompt:",
-        value=prompt,
-        height=200,
-        key="editable_prompt"
-    )
+    if st.session_state["editando"]:
+        st.markdown("### ¿Cómo optimizar tu prompt?")
+        st.markdown(
+            """
+            - Incluí detalles clave como el propósito, el estilo visual y el tipo de imagen.
+            - Editá el texto respetando estos parámetros para resultados óptimos.
+            - **Tip:** Usá frases claras y descriptivas.
+            """
+        )
 
-    prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
-    prompt_limpio = re.sub(r'\s+', ' ', prompt_limpio)
+        st.markdown("### Parámetros Actuales")
+        st.write(st.session_state.get("params", {}))
 
-    st.subheader("Texto Final para Copiar")
-    st.code(prompt_limpio, language="")
+        prompt_editable = st.text_area(
+            "Editá tu prompt:",
+            value=prompt,
+            height=200,
+            key="editable_prompt"
+        )
 
-    return prompt_limpio
+        prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
+        prompt_limpio = re.sub(r'\s+', ' ', prompt_limpio)
+
+        if st.button("Guardar Cambios"):
+            st.session_state["editando"] = False
+            return prompt_limpio
+
+        if st.button("Cancelar"):
+            st.session_state["editando"] = False
+            return prompt
+
+    else:
+        st.markdown(prompt)
+
+        if st.button("Editar Prompt"):
+            st.session_state["editando"] = True
+
+    return prompt
 
 # Configurar Pantalla 2
 
