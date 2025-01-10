@@ -126,8 +126,8 @@ def configurar_pantalla2():
     - Genera prompt con la función anterior
     - Permite edición y copia con st.code
     - Ofrece traducir a inglés (Google Translate)
-    - Lista herramientas recomendadas con enlaces
-    - Botón para reiniciar y volver a Pantalla 1
+    - Lista 6 herramientas recomendadas con enlaces y descripciones
+    - Botón para reiniciar y volver a Pantalla 1 (forzando el scroll al inicio)
     - Mensaje final de contacto
     """
 
@@ -136,6 +136,7 @@ def configurar_pantalla2():
         st.warning("No se han proporcionado datos de la Pantalla 1. Volvé y completá los campos obligatorios.")
         if st.button("Volver a Pantalla 1"):
             st.session_state.mostrar_pantalla2 = False
+            st.experimental_rerun()
         return
 
     # Validar parámetros
@@ -180,7 +181,7 @@ def configurar_pantalla2():
     google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={texto_editable.replace(' ', '%20')}"
     st.markdown(f"[Abrir Google Translate →]({google_translate_url})")
 
-    # Herramientas Recomendadas
+    # Herramientas Recomendadas (6)
     st.subheader("Herramientas recomendadas")
     st.markdown("""
 Estas plataformas te permiten **pegar tu prompt** y generar imágenes basadas en él.  
@@ -188,18 +189,29 @@ Después, **podés volver a esta pantalla** para seguir refinando o crear un nue
 
 - [**DALL-E**](https://labs.openai.com/)  
   :arrow_right: Herramienta de OpenAI para dibujar imágenes con inteligencia artificial.  
-  Permite creaciones artísticas y composiciones realistas. Usa GPT como base para generar conceptos.
+  Permite creaciones artísticas y composiciones realistas, basada en modelos GPT.  
 
 - [**MidJourney**](https://www.midjourney.com/)  
   :arrow_right: Reconocida por su **calidad artística** y estética muy cuidada en las imágenes generadas.
 
 - [**Stable Diffusion**](https://stability.ai/)  
-  :arrow_right: Ideal para **personalización** y modificaciones detalladas de tu prompt. 
+  :arrow_right: Ideal para **personalización** y modificaciones detalladas de tu prompt.
+
+- **Grok de Twitter**  
+  :arrow_right: Conectá tus imágenes con las tendencias más actuales en redes sociales.  
+  *(No tiene un link oficial propio, pero podés usarlo desde Twitter.)*
+
+- **Claude**  
+  :arrow_right: Ideal para analizar y mejorar prompts complejos, integrándose con chatbots IA.
+
+- **Copilot**  
+  :arrow_right: Soporte creativo para generación rápida y versátil de contenido y prompts.
 """)
 
     # Botón para generar un nuevo prompt
     if st.button("Generá un nuevo prompt"):
         st.session_state.mostrar_pantalla2 = False
+        st.experimental_rerun()  # Fuerza un refresco para que Pantalla 1 se vea desde el inicio
 
     # Mensaje final
     st.markdown("""
