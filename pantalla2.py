@@ -88,8 +88,9 @@ def generar_prompt(params):
         prompt_parts.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}"
 )
 
-    # Combinar partes
-    return " ".join(prompt_parts).capitalize() + "."
+  # Combinar todo en un párrafo continuo con frases separadas por puntos
+prompt = ". ".join(filter(None, prompt_parts)) + "."
+return ". ".join([frase.strip().capitalize() for frase in prompt.split(".") if frase.strip()])
 
 def mostrar_prompt(prompt):
     st.subheader("Descripción Detallada")
