@@ -2,7 +2,7 @@ import streamlit as st
 import re
 
 # --------------------------------------------------------------------------------
-# 1. Función para validar parámetros
+# Función para validar parámetros
 # --------------------------------------------------------------------------------
 def validar_parametros(params):
     errores = []
@@ -13,7 +13,7 @@ def validar_parametros(params):
     return errores
 
 # --------------------------------------------------------------------------------
-# 2. Función para generar prompt (versión mejorada)
+# Función para generar prompt (versión mejorada)
 # --------------------------------------------------------------------------------
 def generar_prompt_mejorado(params):
     prompt_parts = []
@@ -96,7 +96,7 @@ def generar_prompt_mejorado(params):
     return prompt
 
 # --------------------------------------------------------------------------------
-# 3. Pantalla 2
+# Pantalla 2
 # --------------------------------------------------------------------------------
 def configurar_pantalla2():
     """
@@ -104,16 +104,10 @@ def configurar_pantalla2():
     - Generación de prompt
     - Área editable + Recurso nativo para copiar
     - Traducción a inglés (narrativa didáctica)
-    - Herramientas recomendadas con enlaces
+    - Herramientas recomendadas con enlaces y descripciones
     - Botón "Generá un nuevo prompt"
-    - Mensaje final de feedback
+    - Mensaje final indicando que es un trabajo de curso y contacto
     """
-    # Opcional: Forzar scroll al inicio (puede funcionar en la mayoría de navegadores)
-    st.markdown("""
-        <script>
-            window.scrollTo(0, 0);
-        </script>
-    """, unsafe_allow_html=True)
 
     # Validar si hay parámetros
     if "params" not in st.session_state or not st.session_state.params:
@@ -141,8 +135,8 @@ def configurar_pantalla2():
 
     # Área Editable
     st.write(
-        "Podés modificar detalles directamente acá abajo. "
-        "Luego podés copiar el texto actualizado desde el recuadro que se muestra más abajo."
+        "Acá podés ajustar libremente los detalles que quieras. No es necesario presionar Ctrl+Enter; "
+        "los cambios se guardan en cuanto hacés clic fuera del cuadro."
     )
     texto_editable = st.text_area(
         label="Editar Prompt",
@@ -150,30 +144,35 @@ def configurar_pantalla2():
         height=200
     )
 
-    # Recurso Nativo para Copiar (con icono de Streamlit)
+    # Recurso Nativo de Streamlit para Copiar
     st.subheader("Copiá tu prompt final")
-    st.code(texto_editable, language="")  # st.code muestra el iconito de copiar
+    st.write("Podés hacer clic en el **icono de copiar** (arriba a la derecha del recuadro) para guardarlo en tu portapapeles.")
+    st.code(texto_editable, language="")  # El ícono de copiar se ve en la parte superior derecha
 
     # Traducción al inglés
+    st.subheader("¿Preferís usarlo en inglés?")
     st.write(
-        "Si querés usar este prompt en herramientas que funcionan mejor en inglés, "
-        "podés traducirlo haciendo clic en el enlace. Solo pegá tu texto allí."
+        "Algunas herramientas de IA funcionan mejor con descripciones en inglés. "
+        "Para traducir, hacé clic en este enlace y pegá tu texto:"
     )
     google_translate_url = f"https://translate.google.com/?sl=es&tl=en&text={texto_editable.replace(' ', '%20')}"
-    st.markdown(f"[Traducir mi texto con Google Translate →]({google_translate_url})")
+    st.markdown(f"[Abrir Google Translate →]({google_translate_url})")
 
-    # Herramientas Recomendadas
+    # Herramientas Recomendadas (con descripciones)
     st.subheader("Herramientas recomendadas")
     st.markdown("""
-Para generar tus imágenes, podés usar estas herramientas (hacé clic en cada enlace y pegá tu prompt ahí).  
-Luego, **podés volver** aquí para ajustar más detalles y crear un nuevo prompt si querés:
+Estas plataformas te permiten **pegar tu prompt** y generar imágenes basadas en él.  
+Después, **podés volver a esta pantalla** para seguir refinando o crear un nuevo prompt.
 
-- [**DALL-E**](https://openai.com/product/dall-e)  
+- [**DALL-E**](https://labs.openai.com/)  
+  :arrow_right: Herramienta de OpenAI para dibujar imágenes con inteligencia artificial.  
+  Permite creaciones artísticas y composiciones realistas. Usa GPT como base para generar conceptos.
+
 - [**MidJourney**](https://www.midjourney.com/)  
+  :arrow_right: Reconocida por su **calidad artística** y estética muy cuidada en las imágenes generadas.
+
 - [**Stable Diffusion**](https://stability.ai/)  
-- [**Grok de Twitter**](https://twitter.com/) (para explorar tendencias inspiradoras)  
-- [**Claude**](https://claude.ai/) (para prompts más complejos o ayuda con texto)  
-- [**Copilot**](https://github.com/features/copilot) (asistencia creativa para refinarlos)  
+  :arrow_right: Ideal para **personalización** y modificaciones detalladas de tu prompt. 
     """)
 
     # Botón para generar un nuevo prompt (volver a empezar)
@@ -183,30 +182,12 @@ Luego, **podés volver** aquí para ajustar más detalles y crear un nuevo promp
     # Mensaje final
     st.markdown("""
 ---
-Este es el trabajo final de un curso de IA.  
+**Trabajo final de un curso de IA.**  
 Para cualquier feedback o consulta, escribí a **julietafantini@gmail.com**.
     """)
 
 
 # --------------------------------------------------------------------------------
-# Si querés probarlo localmente:
+# Para probar localmente:
 # --------------------------------------------------------------------------------
-if __name__ == "__main__":
-    if "params" not in st.session_state:
-        # Simulación de datos desde la Pantalla 1
-        st.session_state.params = {
-            "idea_inicial": "un bosque mágico con criaturas fantásticas",
-            "tipo_de_imagen": "Ilustración",
-            "proposito_categoria": "promoción",
-            "subpropósito": "campaña de marketing",
-            "estilo_artístico": "Otro",
-            "estilo_artístico_personalizado": "estilo acuarela",
-            "iluminación": "luz suave en atardecer",
-            "plano_fotográfico": "plano general",
-            "composicion": "regla de los tercios",
-            "paleta_de_colores": "pastel",
-            "textura": "suave",
-            "resolucion": "4K",
-            "aspecto": "16:9"
-        }
-    configurar_pantalla2()
+if __name__ == "__main__
