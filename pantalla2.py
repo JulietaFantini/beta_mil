@@ -5,21 +5,20 @@ TEMPLATE_BASE = {
     "inicio": "Imagina una imagen de una",
     "representar": "que represente",
     "proposito": "creada para",
-    "estilo": "con un estilo que se inspire en",
-    "iluminacion": "La iluminación debe ser",
+    "estilo": "con el estilo visual del",
+    "iluminacion": "La imagen debe iluminarse con",
     "plano": "capturada desde un",
     "composicion": "siguiendo una composición de",
-    "paleta": "La imagen debe tener una paleta de colores",
-    "textura": "y texturas",
+    "paleta": "Debe tener una paleta de colores",
+    "textura": "y una textura",
     "resolucion": "Finalmente, la resolución debe ser",
     "aspecto": "con una relación de aspecto de"
 }
 
 FRASES_OTRO = {
-    "tipo_imagen": "Imagina un tipo de imagen inspirado en",
     "idea_inicial": "Concebido como una idea inicial basada en",
     "proposito": "Diseñada para un propósito que evoque",
-    "estilo_artistico": "Con un estilo que se inspire en"
+    "estilo_artistico": "Con un estilo artístico que recuerde a"
 }
 
 def validar_parametros(params):
@@ -33,19 +32,19 @@ def validar_parametros(params):
 def generar_prompt(params):
     prompt_parts = []
 
+    # Idea Inicial antes de Tipo de Imagen
+    if params.get("idea_inicial"):
+        prompt_parts.append(f"Imagina {params['idea_inicial'].lower()} representada en una")
+
     # Tipo de Imagen
     if params.get("tipo_de_imagen"):
         if params["tipo_de_imagen"] == "Otro":
             tipo = params.get("tipo_de_imagen_personalizado", "")
-            prompt_parts.append(f"{FRASES_OTRO['tipo_imagen']}: {tipo}")
+            prompt_parts[-1] = f"Imagina un concepto inspirado en {tipo}"
         else:
-            prompt_parts.append(f"{TEMPLATE_BASE['inicio']} {params['tipo_de_imagen'].lower()}")
+            prompt_parts[-1] += f" {params['tipo_de_imagen'].lower()}"
 
-    # Idea Inicial
-    if params.get("idea_inicial"):
-        prompt_parts.append(f"{TEMPLATE_BASE['representar']} {params['idea_inicial']}")
-
-    # Propósito
+    # Propósito de la Imagen
     if params.get("proposito_categoria"):
         proposito = f"{TEMPLATE_BASE['proposito']} {params['proposito_categoria'].lower()}"
         if params.get("subpropósito"):
@@ -60,19 +59,27 @@ def generar_prompt(params):
         else:
             prompt_parts.append(f"{TEMPLATE_BASE['estilo']} {params['estilo_artístico'].lower()}")
 
-    # Opcionales
-    opcionales = {
-        'iluminación': TEMPLATE_BASE['iluminacion'],
-        'plano_fotográfico': TEMPLATE_BASE['plano'],
-        'composicion': TEMPLATE_BASE['composicion'],
-        'paleta_de_colores': TEMPLATE_BASE['paleta'],
-        'textura': TEMPLATE_BASE['textura'],
-        'resolucion': TEMPLATE_BASE['resolucion'],
-        'aspecto': TEMPLATE_BASE['aspecto']
-    }
-    for campo, frase in opcionales.items():
-        if params.get(campo) and params[campo] != "Seleccioná una opción...":
-            prompt_parts.append(f"{frase} {params[campo].lower()}")
+    # Iluminación
+    if params.get("iluminación"):
+        prompt_parts.append(f"{TEMPLATE_BASE['iluminacion']} {params['iluminación'].lower()}")
+
+    # Plano Fotográfico
+    if params.get("plano_fotográfico"):
+        prompt_parts.append(f"{TEMPLATE_BASE['plano']} {params['plano_fotográfico'].lower()}")
+
+    # Composición
+    if params.get("composicion"):
+        prompt_parts.append(f"{TEMPLATE_BASE['composicion']} {params['composicion'].lower()}")
+
+    # Paleta de Colores y Textura
+    if params.get("paleta_de_colores"):
+        prompt_parts.append(f"{TEMPLATE_BASE['paleta']} {params['paleta_de_colores'].lower()}")
+    if params.get("textura"):
+        prompt_parts.append(f"{TEMPLATE_BASE['textura']} {params['textura'].lower()}")
+
+    # Resolución y Relación de Aspecto
+    if params.get("resolucion") and params.get("aspecto"):
+        prompt_parts.append(f"{TEMPLATE_BASE['resolucion']} {params['resolucion']}, {TEMPLATE_BASE['aspecto']} {params['aspecto'].lower()}")
 
     # Combinar partes
     return ". ".join(filter(None, prompt_parts)).capitalize() + "."
@@ -97,7 +104,12 @@ def mostrar_prompt(prompt):
     return prompt_limpio
 
 def configurar_pantalla2():
-    st.title("Generador de Prompts para DALL·E")
+    st.title("Tu prompt está listo")
+    st.markdown(
+    """
+    Este texto combina todos los parámetros que seleccionaste en un formato optimizado para IA. Revísalo, edítalo si es necesario y cópialo fácilmente.
+    """
+)
 
     if "params" not in st.session_state:
         st.warning("Completá primero los datos básicos")
@@ -113,6 +125,17 @@ def configurar_pantalla2():
 
     prompt_inicial = generar_prompt(st.session_state.params)
     prompt_final = mostrar_prompt(prompt_inicial)
+
+    st.subheader("Herramientas recomendadas")
+    st.markdown(
+        """
+        - **DALL-E**: Ideal para realismo y precisión.  
+        - **Midjourney**: Excelente para resultados artísticos.  
+        - **Stable Diffusion**: Perfecto para personalización detallada.  
+        - **Canva**: Integra IA con diseño gráfico.  
+        - **Adobe Firefly**: Herramienta profesional con IA.
+        """
+    )
 
     col1, col2 = st.columns(2)
     with col1:
