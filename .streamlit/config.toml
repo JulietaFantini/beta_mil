@@ -1,27 +1,34 @@
 [server]
 fileWatcherType = "poll"
-layout = "wide"                    # Mantener diseño amplio para buen uso del espacio
+layout = "wide"                    # Diseño amplio para aprovechar espacio
 initial_sidebar_state = "expanded" # Barra lateral abierta por defecto
 
 [theme]
-primaryColor = '#6B46C1'           # Violeta elegante (ya definido)
-backgroundColor = '#FFFFFF'        # Fondo blanco limpio
-secondaryBackgroundColor = '#F9FAFB'  # Gris suave para contrastar
-textColor = '#1A202C'              # Texto en negro suave
-font = 'monospace'                 # Tipografía personalizada seleccionada
+primaryColor = '#6B46C1'           # Violeta elegante como base
+backgroundColor = '#F8F6FF'        # Fondo con un tono violeta claro
+secondaryBackgroundColor = '#EEEAF5'  # Gris lavanda para contrastar
+textColor = '#1A202C'              # Texto en gris oscuro para buena legibilidad
+font = 'monospace'                 # Fuente principal para todo el contenido
 
 [title_style]
-fontSize = "1.5rem"                # Tamaño ajustado para títulos (más pequeños que el default)
-fontWeight = "700"                 # Títulos en negrita para destacar
-color = "#6B46C1"                  # Usar el color principal para títulos
+fontSize = "1.7rem"                # Tamaño ajustado para títulos
+fontWeight = "700"                 # Negrita para resaltar
+color = "#6B46C1"                  # Violeta principal para cohesión visual
+
+[subheader_style]
+fontSize = "1.3rem"                # Tamaño reducido para subtítulos
+fontWeight = "600"                 # Semi-negrita para diferenciación
+color = "#805AD5"                  # Violeta más suave
 
 [text_style]
-fontSize = "1rem"                  # Tamaño estándar para texto explicativo
-fontWeight = "400"                 # Peso normal para lectura cómoda
-color = "#1A202C"                  # Gris oscuro para buena legibilidad
+fontSize = "1rem"                  # Tamaño estándar para explicaciones
+fontWeight = "400"                 # Peso normal para legibilidad
+color = "#4A5568"                  # Gris intermedio
 
 [input_style]
-fontSize = "0.9rem"                # Tamaño más pequeño para elementos interactivos
-fontWeight = "500"                 # Peso ligeramente más destacado
-color = "#333333"                  # Un gris intermedio para inputs
-backgroundColor = "#F1F5F9"        # Fondo claro específico para inputs
+font = 'sans serif'                # Fuente moderna para inputs y campos editables
+fontSize = "0.9rem"                # Tamaño compacto para inputs
+fontWeight = "500"                 # Peso moderado para claridad
+color = "#333333"                  # Gris oscuro para inputs
+backgroundColor = "#E2DFFA"        # Fondo violeta claro para inputs y botones
+borderColor = "#6B46C1"            # Bordes violeta para inputs
