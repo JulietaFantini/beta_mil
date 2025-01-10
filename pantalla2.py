@@ -96,7 +96,8 @@ def mostrar_prompt(prompt):
     prompt_editable = st.text_area(
         "Versión con referencias - Podés editar el texto:",
         value=prompt,
-        height=200
+        height=200,
+        key="editable_prompt"
     )
 
     prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
@@ -112,11 +113,14 @@ def configurar_pantalla2():
     st.title("Tu prompt está listo")
     st.markdown("Este texto combina todos los parámetros que seleccionaste en un formato optimizado para IA. Revísalo, edítalo si es necesario y cópialo fácilmente.")
 
+    # Forzar la página al inicio al cargarse
+    st.markdown("<script>window.scrollTo(0, 0);</script>", unsafe_allow_html=True)
+
     if "params" not in st.session_state:
         st.warning("Faltan algunos datos importantes. Por favor, vuelve a la pantalla anterior y completa los campos obligatorios.")
         if st.button("Volver a Pantalla 1"):
             st.session_state.mostrar_pantalla2 = False
-        return
+            return
 
     errores = validar_parametros(st.session_state.params)
     if errores:
@@ -128,7 +132,6 @@ def configurar_pantalla2():
     prompt_final = mostrar_prompt(prompt_inicial)
 
     if st.button("Modificar parámetros"):
-        st.markdown("Regresa a la pantalla anterior para ajustar los parámetros y generar un nuevo prompt.")
         st.session_state.mostrar_pantalla2 = False
 
     st.subheader("Traducción al Inglés")
