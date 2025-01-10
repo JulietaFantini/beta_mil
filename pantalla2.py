@@ -88,7 +88,7 @@ def generar_prompt(params):
     sentences = re.split(r'(?<=\.)\s+', prompt)
     prompt = '. '.join(sentence[:1].upper() + sentence[1:] for sentence in sentences)
     prompt = re.sub(r'\.\.+', '.', prompt)
-    if not prompt.endswith('.'):
+    if not prompt.endswith('.'): 
         prompt += '.'
 
     return prompt
@@ -121,12 +121,20 @@ def configurar_pantalla2():
     st.title("Tu prompt está listo")
     st.markdown("Este texto combina todos los parámetros seleccionados en un formato optimizado para IA.")
 
-    st.markdown("---")  # Separador visual para comenzar en la parte superior
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
 
     if "params" not in st.session_state:
         st.warning("Faltan datos importantes. Volvé a la pantalla anterior para completarlos.")
         if st.button("Volver a Pantalla 1"):
             st.session_state.mostrar_pantalla2 = False
+            st.experimental_rerun()
         return
 
     errores = validar_parametros(st.session_state.params)
