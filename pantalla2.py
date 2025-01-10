@@ -100,6 +100,8 @@ def mostrar_prompt(prompt):
 
     st.markdown("Podés editar la descripción directamente en el cuadro de texto para personalizarla.")
 
+    st.write("**DEBUG: Prompt inicial generado:**", prompt)
+
     prompt_editable = st.text_area(
         "Versión con referencias - Podés editar el texto:",
         value=prompt,
@@ -108,6 +110,8 @@ def mostrar_prompt(prompt):
 
     prompt_limpio = re.sub(r'\s*\([^)]*\)', '', prompt_editable).strip()
     prompt_limpio = re.sub(r'\s+', ' ', prompt_limpio)
+
+    st.write("**DEBUG: Prompt limpio después de edición:**", prompt_limpio)
 
     st.subheader("Texto Final para Copiar")
     st.code(prompt_limpio, language="")
@@ -119,6 +123,8 @@ def mostrar_prompt(prompt):
 def configurar_pantalla2():
     st.title("Tu prompt está listo")
     st.markdown("Este texto combina todos los parámetros seleccionados en un formato optimizado para IA.")
+
+    st.write("**DEBUG: session_state actual:**", st.session_state)
 
     if "params" not in st.session_state:
         st.warning("Faltan datos importantes. Volvé a la pantalla anterior para completarlos.")
@@ -133,6 +139,8 @@ def configurar_pantalla2():
         return
 
     prompt_inicial = generar_prompt(st.session_state.params)
+    st.write("**DEBUG: Prompt inicial generado antes de mostrar:**", prompt_inicial)
+
     prompt_final = mostrar_prompt(prompt_inicial)
 
     if st.button("Modificar parámetros"):
