@@ -17,7 +17,7 @@ def validar_parametros(params):
     return errores
 
 # --------------------------------------------------------------------------------
-# 2. Función para generar el prompt (versión mejorada)
+# 2. Función para generar el prompt
 # --------------------------------------------------------------------------------
 def generar_prompt_mejorado(params):
     """
@@ -124,10 +124,10 @@ def configurar_pantalla2():
     """
     Muestra la pantalla 2:
     - Genera prompt con la función anterior
-    - Permite edición y copia con st.code
-    - Ofrece traducir a inglés (Google Translate)
-    - Lista 6 herramientas recomendadas con enlaces y descripciones
-    - Botón para reiniciar y volver a Pantalla 1 (forzando el scroll al inicio)
+    - Permite edición y copia con st.code (nativo de Streamlit)
+    - Ofrece traducción a inglés (Google Translate)
+    - Lista 6 herramientas recomendadas con enlaces
+    - Botón para reiniciar y volver a Pantalla 1 (usando st.experimental_rerun)
     - Mensaje final de contacto
     """
 
@@ -136,6 +136,7 @@ def configurar_pantalla2():
         st.warning("No se han proporcionado datos de la Pantalla 1. Volvé y completá los campos obligatorios.")
         if st.button("Volver a Pantalla 1"):
             st.session_state.mostrar_pantalla2 = False
+            # Forzamos recarga de la app para que Pantalla 1 inicie desde arriba
             st.experimental_rerun()
         return
 
@@ -167,7 +168,7 @@ def configurar_pantalla2():
         height=200
     )
 
-    # Recurso Nativo para Copiar
+    # Recurso Nativo de Streamlit para Copiar
     st.subheader("Copiá tu prompt final")
     st.write("Podés hacer clic en el **icono de copiar** (arriba a la derecha del recuadro) para guardarlo en tu portapapeles.")
     st.code(texto_editable, language="")  # Muestra el recuadro con el ícono de copiar
@@ -197,21 +198,21 @@ Después, **podés volver a esta pantalla** para seguir refinando o crear un nue
 - [**Stable Diffusion**](https://stability.ai/)  
   :arrow_right: Ideal para **personalización** y modificaciones detalladas de tu prompt.
 
-- **Grok de Twitter**  
-  :arrow_right: Conectá tus imágenes con las tendencias más actuales en redes sociales.  
-  *(No tiene un link oficial propio, pero podés usarlo desde Twitter.)*
+- [**Grok de Twitter**](https://twitter.com/)  
+  :arrow_right: Conectá tus imágenes con las tendencias más actuales en redes sociales.
 
-- **Claude**  
+- [**Claude**](https://claude.ai/)  
   :arrow_right: Ideal para analizar y mejorar prompts complejos, integrándose con chatbots IA.
 
-- **Copilot**  
+- [**Copilot**](https://github.com/features/copilot)  
   :arrow_right: Soporte creativo para generación rápida y versátil de contenido y prompts.
 """)
 
-    # Botón para generar un nuevo prompt
+    # Botón para generar un nuevo prompt (volver a Pantalla 1)
     if st.button("Generá un nuevo prompt"):
         st.session_state.mostrar_pantalla2 = False
-        st.experimental_rerun()  # Fuerza un refresco para que Pantalla 1 se vea desde el inicio
+        # Forzamos recarga para que Pantalla 1 se muestre desde arriba
+        st.experimental_rerun()
 
     # Mensaje final
     st.markdown("""
