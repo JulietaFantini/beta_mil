@@ -1,7 +1,7 @@
 [server]
 fileWatcherType = "poll"
 layout = "wide"                    # Diseño amplio para aprovechar espacio
-initial_sidebar_state = "expanded" # Barra lateral abierta por defecto
+initial_sidebar_state = "expanded"  # Barra lateral abierta por defecto
 
 [theme]
 primaryColor = '#6B46C1'           # Violeta elegante como base
