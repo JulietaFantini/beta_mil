@@ -1,13 +1,21 @@
 import streamlit as st
 
+# Función para validar valores
+
 def generar_dropdown(parametro, descripcion, opciones, params):
     st.subheader(parametro)
     st.markdown(descripcion)
-    # Etiqueta vacía para evitar repetir el título
     params[parametro.lower().replace(" ", "_")] = st.selectbox(
         label="",
         options=opciones
     )
+    return params
+
+def filtrar_valores(params):
+    """Elimina parámetros no válidos o con valores predeterminados."""
+    for key in list(params.keys()):
+        if params[key] in ("Seleccioná una opción...", "", None):
+            del params[key]
     return params
 
 def parametros_obligatorios(params):
@@ -22,7 +30,7 @@ def parametros_obligatorios(params):
          "Arte conceptual", "Collage surrealista", "Dibujo técnico", "Fotografía conceptual", "Otro"],
         params
     )
-    if params["tipo_de_imagen"].lower() == "otro":
+    if params.get("tipo_de_imagen", "").lower() == "otro":
         params["tipo_de_imagen_personalizado"] = st.text_input(
             "Describe el tipo de imagen aquí (ej.: 'Collage surrealista'):"
         )
@@ -47,7 +55,7 @@ def parametros_obligatorios(params):
          "Futurismo", "Cubismo", "Impresionismo", "Surrealismo", "Otro"],
         params
     )
-    if params["estilo_artístico"].lower() == "otro":
+    if params.get("estilo_artístico", "").lower() == "otro":
         params["estilo_artístico_personalizado"] = st.text_input(
             "Describí tu estilo artístico personalizado (ej.: 'realismo fotográfico con elementos surrealistas'):"
         )
@@ -171,6 +179,9 @@ def configurar_pantalla1():
 
     # Captura de opcionales
     params = parametros_opcionales(params)
+
+    # Filtrar valores no válidos
+    params = filtrar_valores(params)
 
     # Guardar en session_state
     st.session_state.params = params
