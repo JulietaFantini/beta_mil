@@ -186,12 +186,15 @@ def configurar_pantalla1():
     # Guardar en session_state
     st.session_state.params = params
 
-    if st.button("Validar y continuar"):
-        errores = validar_errores(params)
-        if errores:
-            st.error("\n".join(errores))
-        else:
-            st.session_state.mostrar_pantalla2 = True
+  if st.button("Validar y continuar"):
+    errores = validar_errores(params)
+    if errores:
+        st.error("\n".join(errores))
+    else:
+        st.session_state.mostrar_pantalla2 = True
+        st.experimental_set_query_params(scrollTo="top")  # Fuerza el scroll al inicio
+        st.experimental_rerun()  # Recarga la aplicación para mostrar Pantalla 2
 
 if __name__ == "__main__":
     configurar_pantalla1()
+
