@@ -132,13 +132,16 @@ def configurar_pantalla2():
     prompt_inicial = generar_prompt(st.session_state.params)
     prompt_final = mostrar_prompt(prompt_inicial)
 
-    if st.button("Modificar parámetros"):
-        st.markdown(
-            """
-            **Regresa a la pantalla anterior para ajustar los parámetros y generar un nuevo prompt.**
-            """
-        )
-        st.session_state.mostrar_pantalla2 = False
+    prompt_inicial = generar_prompt(st.session_state.params)
+prompt_final = mostrar_prompt(prompt_inicial)
+
+if st.button("Modificar parámetros"):
+    st.markdown(
+        """
+        **Regresa a la pantalla anterior para ajustar los parámetros y generar un nuevo prompt.**
+        """
+    )
+    st.session_state.mostrar_pantalla2 = False
 
     st.subheader("Traducción al Inglés")
     st.markdown(
