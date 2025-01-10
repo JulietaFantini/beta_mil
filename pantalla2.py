@@ -138,6 +138,14 @@ def configurar_pantalla2():
     prompt_inicial = generar_prompt(st.session_state.params)
     prompt_final = mostrar_prompt(prompt_inicial)
 
+    if st.button("Modificar parámetros"):
+        st.markdown(
+            """
+            **Regresa a la pantalla anterior para ajustar los parámetros y generar un nuevo prompt.**
+            """
+        )
+        st.session_state.mostrar_pantalla2 = False
+
     st.subheader("Traducción al Inglés")
     st.markdown(
         """
@@ -159,14 +167,6 @@ def configurar_pantalla2():
         - **[Adobe Firefly](https://www.adobe.com/sensei/generative-ai/adobe-firefly.html)**: Resultados profesionales con IA.
         """
     )
-
-    if st.button("Modificar parámetros"):
-        st.markdown(
-            """
-            **Regresa a la pantalla anterior para ajustar los parámetros y generar un nuevo prompt.**
-            """
-        )
-        st.session_state.mostrar_pantalla2 = False
 
 if __name__ == "__main__":
     configurar_pantalla2()
