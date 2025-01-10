@@ -59,5 +59,5 @@ def generar_prompt_mejorado(params):
         prompt_parts.append(proposito_text)
 
     # Estilo artístico
-    if params.get("estilo_artístico"):
-        if params["estilo_artístico"] == "
+    if params["estilo_artístico"] == "Otro":
+    ...
